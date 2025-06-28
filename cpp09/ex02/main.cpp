@@ -1,25 +1,49 @@
 #include "PmergeMe.hpp"
+#include <iostream>
+#include <sstream>
+#include <ctime>
+#include <cctype>
 
-bool isPositiveInteger(const std::string& s) {
-    for (size_t i = 0; i < s.size(); ++i) {
-        if (!isdigit(s[i])) return false;
-    }
-    return !s.empty();
+bool isPositiveInteger(const std::string &s)
+{
+    if (s.empty())
+        return false;
+    for (size_t i = 0; i < s.size(); ++i)
+        if (!isdigit(s[i]))
+            return false;
+    return true;
 }
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
+#include <unordered_set>
+
+bool hasDuplicates(const std::string &s)
+{
+    std::unordered_set<int> seen(data.begin(), data.end());
+    return seen.size() != data.size();
+}
+int main(int argc, char **argv)
+{
+    if (argc < 2)
+    {
         std::cerr << "Error" << std::endl;
         return 1;
     }
 
+    PmergeMe sorter;
     std::vector<int> vec;
     std::deque<int> deq;
 
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i)
+    {
         std::string arg(argv[i]);
-        if (!isPositiveInteger(arg)) {
+        if (!isPositiveInteger(arg))
+        {
             std::cerr << "Error" << std::endl;
+            return 1;
+        }
+        if (hasDuplicates(vec))
+        {
+            std::cerr << "Error: Duplicate numbers are not allowed" << std::endl;
             return 1;
         }
         int value;
@@ -35,12 +59,8 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
 
     clock_t startVec = clock();
-    PmergeMe::sortVector(vec);
+    sorter.sortVector(vec);
     clock_t endVec = clock();
-
-    clock_t startDeq = clock();
-    PmergeMe::sortDeque(deq);
-    clock_t endDeq = clock();
 
     std::cout << "After:";
     for (size_t i = 0; i < vec.size(); ++i)
@@ -48,11 +68,16 @@ int main(int argc, char** argv) {
     std::cout << std::endl;
 
     double timeVec = 1000000.0 * (endVec - startVec) / CLOCKS_PER_SEC;
-    double timeDeq = 1000000.0 * (endDeq - startDeq) / CLOCKS_PER_SEC;
+    std::cout << "Time to process " << vec.size() << " elements with std::vector: " << timeVec << " us" << std::endl;
+    std::cout << "Total comparisons (vector): " << PmergeMe::counter << std::endl;
 
-    std::cout << "Time to process a range of " << vec.size() << " elements with std::vector : " << timeVec << " us" << std::endl;
-    std::cout << "Time to process a range of " << deq.size() << " elements with std::deque : " << timeDeq << " us" << std::endl;
-    std::cout <<"counting :  " << PmergeMe::counter++;
+    clock_t startDeq = clock();
+    sorter.sortDeque(deq);
+    clock_t endDeq = clock();
+
+    double timeDeq = 1000000.0 * (endDeq - startDeq) / CLOCKS_PER_SEC;
+    std::cout << "Time to process " << deq.size() << " elements with std::deque: " << timeDeq << " us" << std::endl;
+    std::cout << "Total comparisons (deque): " << PmergeMe::counter << std::endl;
 
     return 0;
 }

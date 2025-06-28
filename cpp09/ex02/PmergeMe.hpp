@@ -3,25 +3,26 @@
 
 #include <vector>
 #include <deque>
-#include <string>
-#include <ctime>
-#include <iostream>
-#include <sstream>
-#include <algorithm>
+#include <cstddef>
 
 class PmergeMe {
 public:
     PmergeMe();
     ~PmergeMe();
-    static void sortVector(std::vector<int>& data);
-    static void sortDeque(std::deque<int>& data);
-    static int counterV;
-    static int counterD;  
+
+    void sortVector(std::vector<int>& data);
+    void sortDeque(std::deque<int>& data);
+
+    static int counter;
 
 private:
-    template <typename Container>
-    static void fordJohnsonRecursive(Container& data);
+    void fordJohnsonRecursive(std::vector<int>& data);
+    void fordJohnsonRecursive(std::deque<int>& data);
+
+    void generateJacobsthalIndices(std::vector<size_t>& indices, size_t n);
+
+    template <typename Iter, typename T>
+    Iter myLowerBound(Iter low, Iter high, const T& value);
 };
 
-#endif 
-
+#endif
