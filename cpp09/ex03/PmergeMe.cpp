@@ -1,18 +1,21 @@
 #include "PmergeMe.hpp"
-#include <iostream>
-#include <vector>
-#include <deque>
-#include <set>
-#include <climits>
-#include <cstdlib>
-#include <cstring>
-#include <algorithm>
-#include <string>
-#include <cctype>
 
 // Static comparison counter
 int PmergeMe::comp = 0;
 
+// calling the ford and reset the comp to zero
+
+void PmergeMe::sortVector(std::vector<int>& data) {
+    comp = 0;
+    fordJohnsonRecursive(data);
+}
+
+void PmergeMe::sortDeque(std::deque<int>& data) {
+    comp = 0;
+    fordJohnsonRecursive(data);
+}
+
+// --------- constractors,getters ,validator functions
 PmergeMe::PmergeMe() {}
 PmergeMe::~PmergeMe() {}
 PmergeMe::PmergeMe(const PmergeMe& other) { this->Numbers = other.Numbers; }
@@ -56,7 +59,7 @@ bool PmergeMe::validInput(int argc, char **argv) {
     }
     return true;
 }
-
+// ----------------------------jacobthal------------------------------------------------------------------------
 void PmergeMe::generateJacobsthalIndices(std::vector<size_t>& indices, size_t n) {
     indices.clear();
     if (n == 0) return;
@@ -79,7 +82,7 @@ void PmergeMe::generateJacobsthalIndices(std::vector<size_t>& indices, size_t n)
         indices.insert(indices.begin(), 0);
     }
 }
-
+// -------------------------------ft_lowerbound
 template <typename Iter, typename T>
 Iter PmergeMe::myLowerBound(Iter first, Iter last, const T& value, const T& maxValue) {
     Iter limit = last;
@@ -104,7 +107,7 @@ Iter PmergeMe::myLowerBound(Iter first, Iter last, const T& value, const T& maxV
 
     return low;
 }
-
+// ----------------------------fordJohnson--------------------------
 void PmergeMe::fordJohnsonRecursive(std::vector<int>& data) {
     if (data.size() <= 1) return;
 
@@ -139,7 +142,7 @@ void PmergeMe::fordJohnsonRecursive(std::vector<int>& data) {
                 idx < mainChain.size() ? mainChain[idx] : INT_MAX);
             mainChain.insert(pos, pending[idx]);
             inserted[idx] = true;
-            if (pending.size() == 21 && comp > 66) {
+            if (Numbers.size() == 21 && comp > 66) {
                 std::cerr << "Error: Exceeded 66 comparisons on 21 elements." << std::endl;
                 exit(1);
             }
@@ -153,7 +156,7 @@ void PmergeMe::fordJohnsonRecursive(std::vector<int>& data) {
                 i < mainChain.size() ? mainChain[i] : INT_MAX);
             mainChain.insert(pos, pending[i]);
             inserted[i] = true;
-            if (pending.size() == 21 && comp > 66) {
+            if (Numbers.size() == 21 && comp > 66) {
                 std::cerr << "Error: Exceeded 66 comparisons on 21 elements." << std::endl;
                 exit(1);
             }
@@ -202,7 +205,7 @@ void PmergeMe::fordJohnsonRecursive(std::deque<int>& data) {
                 idx < mainChain.size() ? mainChain[idx] : INT_MAX);
             mainChain.insert(pos, pending[idx]);
             inserted[idx] = true;
-            if (pending.size() == 21 && comp > 66) {
+            if (Numbers.size() == 21 && comp > 66) {
                 std::cerr << "Error: Exceeded 66 comparisons on 21 elements." << std::endl;
                 exit(1);
             }
@@ -216,7 +219,7 @@ void PmergeMe::fordJohnsonRecursive(std::deque<int>& data) {
                 i < mainChain.size() ? mainChain[i] : INT_MAX);
             mainChain.insert(pos, pending[i]);
             inserted[i] = true;
-            if (pending.size() == 21 && comp > 66) {
+            if (Numbers.size() == 21 && comp > 66) {
                 std::cerr << "Error: Exceeded 66 comparisons on 21 elements." << std::endl;
                 exit(1);
             }
@@ -231,12 +234,3 @@ void PmergeMe::fordJohnsonRecursive(std::deque<int>& data) {
     data = mainChain;
 }
 
-void PmergeMe::sortVector(std::vector<int>& data) {
-    comp = 0;
-    fordJohnsonRecursive(data);
-}
-
-void PmergeMe::sortDeque(std::deque<int>& data) {
-    comp = 0;
-    fordJohnsonRecursive(data);
-}
