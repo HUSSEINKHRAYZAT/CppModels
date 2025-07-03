@@ -30,22 +30,35 @@ void BitcoinExchange::loadDatabase(const std::string& dbFile) {
 }
 
 bool BitcoinExchange::isValidDate(const std::string& date) {
-    if (date.length() != 10 ||
-        date[4] != '-' || date[7] != '-')
+    if (date.length() != 10 || date[4] != '-' || date[7] != '-')
         return false;
 
     int y, m, d;
-    std::istringstream ss(date);
     char dash1, dash2;
+    std::istringstream ss(date);
     ss >> y >> dash1 >> m >> dash2 >> d;
+
     if (ss.fail() || dash1 != '-' || dash2 != '-')
         return false;
 
-    if (y < 0 || m < 1 || m > 12 || d < 1 || d > 31)
+    if (y < 0 || m < 1 || m > 12 || d < 1)
+        return false;
+
+    // Days in month
+    int daysInMonth[] = { 31, 28, 31, 30, 31, 30,
+                          31, 31, 30, 31, 30, 31 };
+
+    // Check for leap year
+    bool isLeap = (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
+    if (m == 2 && isLeap)
+        daysInMonth[1] = 29;
+
+    if (d > daysInMonth[m - 1])
         return false;
 
     return true;
 }
+
 
 bool BitcoinExchange::isValidValue(const std::string& valueStr, double &value) {
     std::istringstream ss(valueStr);
